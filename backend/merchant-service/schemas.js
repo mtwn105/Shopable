@@ -16,7 +16,6 @@ const merchantSchema = new Schema(Merchant, {
   shopName: { type: "string" },
   shopUniqueName: { type: "string" },
   shopLogo: { type: "string" },
-  token: { type: "string" },
   createdDate: { type: "date" },
   modifiedDate: { type: "date" },
 });

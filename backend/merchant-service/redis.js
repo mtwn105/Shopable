@@ -21,7 +21,8 @@ let merchantRepository = null;
 
   merchantRepository = client.fetchRepository(merchantSchema);
 
-  (async () => await merchantRepository.createIndex())();
+  await merchantRepository.dropIndex();
+  await merchantRepository.createIndex();
 })();
 
 module.exports = {

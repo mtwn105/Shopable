@@ -3,6 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const bcrypt = require("bcrypt");
 const { getMerchantRepository } = require("./redis");
+const { generateToken } = require("./jwt");
 
 require("dotenv").config();
 
@@ -94,6 +95,38 @@ app.get("/api/merchant/:merchantId", async (req, res, next) => {
     }
 
     res.status(200).json(merchant);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Login Merchant
+app.post("/api/merchant/login", async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const merchant = await getMerchantRepository()
+      .search()
+      .where("email")
+      .equals(email)
+      .return.first();
+
+    if (!merchant) {
+      return res.status(404).json({ message: "Merchant not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, merchant.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // Generate token
+    const token = generateToken(JSON.stringify(merchant));
+
+    res.status(200).json({
+      message: "Login successful",
+      token,
+    });
   } catch (err) {
     next(err);
   }
