@@ -132,6 +132,32 @@ app.post("/api/merchant/login", async (req, res, next) => {
   }
 });
 
+// Get Shop Details by shop unique name
+app.get("/api/merchant/shop/:shopUniqueName", async (req, res, next) => {
+  try {
+    const { shopUniqueName } = req.params;
+
+    const merchant = await getMerchantRepository()
+      .search()
+      .where("shopUniqueName")
+      .equals(shopUniqueName)
+      .return.first();
+
+    if (!merchant) {
+      return res.status(404).json({ message: "Shop not found" });
+    }
+
+    res.status(200).json({
+      shopName: merchant.shopName,
+      shopUniqueName: merchant.shopUniqueName,
+      shopLogo: merchant.shopLogo,
+      merchantId: merchant.entityId,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Error Handler
 const notFound = (req, res, next) => {
   res.status(404);
