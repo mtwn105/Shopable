@@ -1,6 +1,8 @@
 const { Entity, Schema } = require("redis-om");
 
 class Customer extends Entity {}
+class Cart extends Entity {}
+class CartItems extends Entity {}
 
 // Customer Schema
 const customerSchema = new Schema(Customer, {
@@ -13,6 +15,23 @@ const customerSchema = new Schema(Customer, {
   modifiedDate: { type: "date" },
 });
 
+// Cart Schema
+const cartSchema = new Schema(Cart, {
+  customerId: { type: "string" },
+  items: { type: "string[]" },
+  totalPrice: { type: "number" },
+});
+
+// Cart Items Schema
+const cartItemsSchema = new Schema(CartItems, {
+  productId: { type: "string" },
+  quantity: { type: "number" },
+  price: { type: "number" },
+  totalPrice: { type: "number" },
+});
+
 module.exports = {
   customerSchema,
+  cartSchema,
+  cartItemsSchema,
 };

@@ -2,7 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const bcrypt = require("bcrypt");
-const { getCustomerRepository } = require("./redis");
+const {
+  getCustomerRepository,
+  getCartRepository,
+  getCartItemsRepository,
+} = require("./redis");
 const { generateToken, verifyToken } = require("./jwt");
 
 require("dotenv").config();
@@ -16,7 +20,10 @@ app.use(cors());
 
 // JWT Verify Middleware
 const jwtVerify = (req, res, next) => {
-  if (!req.path.startsWith("/api/customer/register")) {
+  if (
+    !req.path.startsWith("/api/customer/register") &&
+    !req.path.startsWith("/api/customer/login")
+  ) {
     if (req.headers.authorization) {
       let token = req.headers["authorization"];
       if (!token) {
@@ -91,7 +98,7 @@ app.post("/api/customer/register", async (req, res, next) => {
 
 // Login Customer
 app.post("/api/customer/login", async (req, res, next) => {
-  const { email, password } = req.body;
+  const { merchantId, email, password } = req.body;
 
   const customerRepository = getCustomerRepository();
 
@@ -101,6 +108,8 @@ app.post("/api/customer/login", async (req, res, next) => {
       .search()
       .where("email")
       .equals(email)
+      .and("merchantId")
+      .equals(merchantId)
       .first();
 
     if (!customer) {
@@ -114,7 +123,7 @@ app.post("/api/customer/login", async (req, res, next) => {
     }
 
     // Create JWT
-    const token = generateToken(customer);
+    const token = generateToken(JSON.stringify(customer));
 
     return res.status(200).send({
       message: "Login successful",
@@ -132,7 +141,7 @@ app.get("/api/customer/:id", async (req, res, next) => {
   const customerRepository = getCustomerRepository();
 
   try {
-    const customer = await customerRepository.get(id);
+    const customer = await customerRepository.fetch(id);
 
     if (!customer) {
       return res.status(404).send("Customer not found");
@@ -182,6 +191,117 @@ app.put("/api/customer/:id", async (req, res, next) => {
     await customerRepository.save(customer);
 
     return res.status(200).send(customer);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Get Cart
+app.get("/api/customer/cart/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  const cartRepository = getCartRepository();
+
+  try {
+    const cart = await cartRepository
+      .search()
+      .where("customerId")
+      .equals(id)
+      .first();
+
+    if (!cart) {
+      // Create Cart
+      const cart = await cartRepository.createAndSave({
+        customerId: id,
+        items: [],
+        totalPrice: 0,
+        createdDate: new Date(),
+        modifiedDate: new Date(),
+      });
+
+      return res.status(200).send(cart);
+    } else {
+      // Fetch cart items
+      const cartItemsRepository = getCartItemsRepository();
+      const cartItems = [];
+
+      for (const item of cart.items) {
+        const cartItem = await cartItemsRepository.fetch(item);
+        cartItems.push({
+          productId: cartItem.productId,
+          quantity: cartItem.quantity,
+          price: cartItem.price,
+        });
+      }
+
+      return res.status(200).send({
+        items: cartItems,
+        totalPrice: cart.totalPrice,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Update Cart
+app.put("/api/customer/cart/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  const cartRepository = getCartRepository();
+
+  try {
+    const cart = await cartRepository
+      .search()
+      .where("customerId")
+      .equals(id)
+      .first();
+
+    if (!cart) {
+      // Create Cart
+      const cart = await cartRepository.createAndSave({
+        customerId: id,
+        items: [],
+        totalPrice: 0,
+        createdDate: new Date(),
+        modifiedDate: new Date(),
+      });
+
+      return res.status(200).send(cart);
+    } else {
+      const { items } = req.body;
+
+      const cartItemsRepository = getCartItemsRepository();
+
+      const cartItems = [];
+      let totalPrice = 0;
+
+      // Delete all cart items
+      for (let i = 0; i < cart.items.length; i++) {
+        await cartItemsRepository.remove(cart.items[i]);
+      }
+
+      // Create new cart items
+      for (let i = 0; i < items.length; i++) {
+        const cartItem = await cartItemsRepository.createAndSave({
+          productId: items[i].productId,
+          quantity: items[i].quantity,
+          price: items[i].price,
+          totalPrice: items[i].quantity * items[i].price,
+        });
+        cartItems.push(cartItem.entityId);
+        totalPrice += cartItem.totalPrice;
+      }
+
+      cart.items = cartItems;
+      cart.totalPrice = totalPrice;
+
+      cart.modifiedDate = new Date();
+
+      await cartRepository.save(cart);
+
+      return res.status(200).send(cart);
+    }
   } catch (err) {
     next(err);
   }
