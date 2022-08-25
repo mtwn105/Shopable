@@ -26,8 +26,6 @@ const cartSchema = new Schema(Cart, {
 const cartItemsSchema = new Schema(CartItems, {
   productId: { type: "string" },
   quantity: { type: "number" },
-  price: { type: "number" },
-  totalPrice: { type: "number" },
 });
 
 module.exports = {

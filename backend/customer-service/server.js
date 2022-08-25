@@ -291,8 +291,12 @@ app.put("/api/customer/cart/:id", async (req, res, next) => {
       let totalPrice = 0;
 
       // Delete all cart items
-      for (let i = 0; i < cart.items.length; i++) {
-        await cartItemsRepository.remove(cart.items[i]);
+      if (!!cart.items && cart.items.length > 0) {
+        for (let i = 0; i < cart.items.length; i++) {
+          await cartItemsRepository.remove(cart.items[i]);
+        }
+      } else {
+        cart.items = [];
       }
 
       // Create new cart items
@@ -324,6 +328,75 @@ app.put("/api/customer/cart/:id", async (req, res, next) => {
       await cartRepository.save(cart);
 
       return res.status(200).send(cart);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Add to Cart
+app.post("/api/customer/cart/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  const { productId } = req.body;
+
+  const cartRepository = getCartRepository();
+  const cartItemsRepository = getCartItemsRepository();
+
+  try {
+    let cart = await cartRepository
+      .search()
+      .where("customerId")
+      .equals(id)
+      .first();
+
+    if (!cart) {
+      // Create Cart Item
+      const cartItem = await cartItemsRepository.createAndSave({
+        productId: productId,
+        quantity: 1,
+      });
+
+      // Create Cart
+      const cart = await cartRepository.createAndSave({
+        customerId: id,
+        items: [cartItem.entityId],
+        createdDate: new Date(),
+        modifiedDate: new Date(),
+      });
+
+      return res.status(200).send(cart);
+    } else {
+      // Fetch cart items
+      const cartItems = [];
+
+      for (const item of cart.items) {
+        const cartItem = await cartItemsRepository.fetch(item);
+        cartItems.push(cartItem);
+      }
+
+      // Check if product already exists in cart
+      let cartItem = cartItems.find((item) => item.productId === productId);
+
+      if (cartItem) {
+        // Update cart item quantity
+        cartItem.quantity += 1;
+        await cartItemsRepository.save(cartItem);
+      } else {
+        // Create cart item
+        const cartItem = await cartItemsRepository.createAndSave({
+          productId: productId,
+          quantity: 1,
+        });
+
+        cart.items.push(cartItem.entityId);
+
+        cart.modifiedDate = new Date();
+
+        await cartRepository.save(cart);
+      }
+
+      return res.status(200).send("Added to cart");
     }
   } catch (err) {
     next(err);
