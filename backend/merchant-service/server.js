@@ -2,9 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const bcrypt = require("bcrypt");
-// const axios = require("axios").default;
-const { v4: uuidv4 } = require("uuid");
-
 const { getMerchantRepository } = require("./redis");
 
 require("dotenv").config();
@@ -55,11 +52,7 @@ app.post("/api/merchant", async (req, res, next) => {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
 
-    // Generate Merchant Id
-    const merchantId = uuidv4();
-
     merchant = {
-      merchantId,
       firstName,
       lastName,
       email,
@@ -85,6 +78,22 @@ app.post("/api/merchant", async (req, res, next) => {
     merchant = await getMerchantRepository().createAndSave(merchant);
 
     res.status(201).json(merchant);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Get Merchant Details
+app.get("/api/merchant/:merchantId", async (req, res, next) => {
+  try {
+    const { merchantId } = req.params;
+    const merchant = await getMerchantRepository().fetch(merchantId);
+
+    if (!merchant) {
+      return res.status(404).json({ message: "Merchant not found" });
+    }
+
+    res.status(200).json(merchant);
   } catch (err) {
     next(err);
   }

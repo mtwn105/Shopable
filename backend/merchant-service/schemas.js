@@ -4,7 +4,6 @@ class Merchant extends Entity {}
 
 // Merchant Schema
 const merchantSchema = new Schema(Merchant, {
-  merchantId: { type: "string" },
   firstName: { type: "string" },
   lastName: { type: "string" },
   email: { type: "string" },
