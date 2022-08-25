@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const axios = require("axios").default;
 const bcrypt = require("bcrypt");
 const {
   getCustomerRepository,
@@ -224,19 +225,32 @@ app.get("/api/customer/cart/:id", async (req, res, next) => {
       // Fetch cart items
       const cartItemsRepository = getCartItemsRepository();
       const cartItems = [];
+      let totalPrice = 0;
 
       for (const item of cart.items) {
         const cartItem = await cartItemsRepository.fetch(item);
+
+        // Fetch product details
+        const productData = await axios.get(
+          process.env.INVENTORY_SERVICE_URL +
+            "/api/product/get/" +
+            cartItem.productId
+        );
+
+        const product = productData.data;
+
         cartItems.push({
           productId: cartItem.productId,
           quantity: cartItem.quantity,
-          price: cartItem.price,
+          price: product.discountPrice,
         });
+
+        totalPrice += product.discountPrice * cartItem.quantity;
       }
 
       return res.status(200).send({
         items: cartItems,
-        totalPrice: cart.totalPrice,
+        totalPrice,
       });
     }
   } catch (err) {
@@ -283,11 +297,20 @@ app.put("/api/customer/cart/:id", async (req, res, next) => {
 
       // Create new cart items
       for (let i = 0; i < items.length; i++) {
+        // Fetch product details
+        const productData = await axios.get(
+          process.env.INVENTORY_SERVICE_URL +
+            "/api/product/get/" +
+            items[i].productId
+        );
+
+        const product = productData.data;
+
         const cartItem = await cartItemsRepository.createAndSave({
           productId: items[i].productId,
           quantity: items[i].quantity,
-          price: items[i].price,
-          totalPrice: items[i].quantity * items[i].price,
+          price: product.discountPrice,
+          totalPrice: items[i].quantity * product.discountPrice,
         });
         cartItems.push(cartItem.entityId);
         totalPrice += cartItem.totalPrice;
