@@ -1,66 +1,27 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Entity, Schema } = require("redis-om");
+
+class Merchant extends Entity {}
 
 // Merchant Schema
-const merchants = new Schema({
-  id: { type: String },
-  firstName: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 2,
-    maxlength: 50,
-  },
-  lastName: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 2,
-    maxlength: 50,
-  },
-  // Email Validation
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    validate: {
-      validator: function (v) {
-        return /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(v);
-      },
-      message: (props) => `${props.value} is not a valid email!`,
-    },
-  },
-  password: { type: String, required: true, minlength: 6 },
-  address: {
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    zip: { type: String, required: true },
-    country: { type: String, required: true },
-  },
-  phoneNumber: { type: Number, required: true },
-  shopName: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 2,
-    maxlength: 50,
-  },
-  shopUniqueName: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 2,
-    maxlength: 50,
-  },
-  shopLogo: { type: String, required: true },
-  token: { type: String },
-  createdDate: { type: Date, required: true },
-  modifiedDate: { type: Date, required: true },
+const merchantSchema = new Schema(Merchant, {
+  merchantId: { type: "string" },
+  firstName: { type: "string" },
+  lastName: { type: "string" },
+  email: { type: "string" },
+  password: { type: "string" },
+  address: { type: "string" },
+  state: { type: "string" },
+  zip: { type: "string" },
+  country: { type: "string" },
+  phoneNumber: { type: "number" },
+  shopName: { type: "string" },
+  shopUniqueName: { type: "string" },
+  shopLogo: { type: "string" },
+  token: { type: "string" },
+  createdDate: { type: "date" },
+  modifiedDate: { type: "date" },
 });
 
-const Merchant = mongoose.model("Merchant", merchants, "merchants");
-
 module.exports = {
-  Merchant,
+  merchantSchema,
 };

@@ -20,6 +20,7 @@
     "mongoose": "^6.5.2",
     "morgan": "^1.10.0",
     "redis": "^4.2.0",
+    "redis-om": "^0.3.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

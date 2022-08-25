@@ -5,13 +5,9 @@ const bcrypt = require("bcrypt");
 // const axios = require("axios").default;
 const { v4: uuidv4 } = require("uuid");
 
-const { connectToRedis } = require("./redis");
-const connectDB = require("./mongo");
-const { Merchant } = require("./schemas");
+const { getMerchantRepository } = require("./redis");
 
 require("dotenv").config();
-
-connectDB();
 
 const app = express();
 
@@ -19,8 +15,6 @@ app.use(express.json());
 app.use(express.text());
 app.use(morgan("tiny"));
 app.use(cors());
-
-let client = null;
 
 // Register a Merchant
 app.post("/api/merchant", async (req, res, next) => {
@@ -31,6 +25,9 @@ app.post("/api/merchant", async (req, res, next) => {
       email,
       password,
       address,
+      state,
+      zip,
+      country,
       phoneNumber,
       shopName,
       shopUniqueName,
@@ -39,13 +36,15 @@ app.post("/api/merchant", async (req, res, next) => {
     req.body;
 
     // Check if the merchant with this email or shopname or shopuniquename ignoring cases already exists
-    let merchant = await Merchant.findOne({
-      $or: [
-        { email: { $regex: new RegExp(email, "i") } },
-        { shopName: { $regex: new RegExp(shopName, "i") } },
-        { shopUniqueName: { $regex: new RegExp(shopUniqueName, "i") } },
-      ],
-    });
+    let merchant = await getMerchantRepository()
+      .search()
+      .where("email")
+      .equals(email)
+      .or("shopName")
+      .equals(shopName)
+      .or("shopUniqueName")
+      .equals(shopUniqueName)
+      .return.first();
 
     if (merchant) {
       return res.status(400).json({ message: "Merchant already exists" });
@@ -59,29 +58,23 @@ app.post("/api/merchant", async (req, res, next) => {
     // Generate Merchant Id
     const merchantId = uuidv4();
 
-    merchant = new Merchant({
-      id: merchantId,
+    merchant = {
+      merchantId,
       firstName,
       lastName,
       email,
       password,
       address,
+      state,
+      zip,
+      country,
       phoneNumber,
       shopName,
       shopUniqueName,
       shopLogo,
       createdDate: new Date(),
       modifiedDate: new Date(),
-    });
-
-    // Validate no fields are empty using mongoose
-    const error = merchant.validateSync();
-    if (error && error.message) {
-      // Return all errors
-      return res
-        .status(400)
-        .json({ message: "Error while saving Merchant", error: error.message });
-    }
+    };
 
     // Encrypt password using bcrypt
     const salt = await bcrypt.genSalt(10);
@@ -89,7 +82,7 @@ app.post("/api/merchant", async (req, res, next) => {
 
     merchant.password = hashedPassword;
 
-    merchant = await merchant.save();
+    merchant = await getMerchantRepository().createAndSave(merchant);
 
     res.status(201).json(merchant);
   } catch (err) {
@@ -117,8 +110,7 @@ app.use(errorHandler);
 
 app.listen(process.env.PORT || 3000, async function () {
   console.log("Merchant Service is running");
-  client = await connectToRedis();
-  client.ping();
+  // client = await connectToRedis();
 });
 
 module.exports = app;
