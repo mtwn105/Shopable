@@ -1,3 +1,5 @@
+import { InventoryService } from './services/inventory.service';
+import { MerchantService } from './services/merchant.service';
 import { MaterialModule } from './material/material.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -11,6 +13,9 @@ import { RegisterComponent } from './components/merchant/register/register.compo
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { InventoryComponent } from './components/merchant/inventory/inventory.component';
 import { AddEditProductComponent } from './components/merchant/inventory/add-edit-product/add-edit-product.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,15 +25,22 @@ import { AddEditProductComponent } from './components/merchant/inventory/add-edi
     RegisterComponent,
     NavbarComponent,
     InventoryComponent,
-    AddEditProductComponent
+    AddEditProductComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [
+    MerchantService,
+    InventoryService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
