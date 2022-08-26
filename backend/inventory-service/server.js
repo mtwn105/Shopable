@@ -18,6 +18,7 @@ const jwtVerify = (req, res, next) => {
   if (
     !req.path.startsWith("/api/product/all") &&
     !req.path.startsWith("/api/product/search") &&
+    !req.path.startsWith("/api/product/stock") &&
     !req.path.startsWith("/api/product/get")
   ) {
     if (req.headers.authorization) {
@@ -216,6 +217,32 @@ app.get("/api/product/search", async (req, res, next) => {
       .return.all();
 
     res.status(200).json(products);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Update Product Stock
+app.put("/api/product/stock/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  const { quantity } = req.body;
+
+  const productRepository = getProductRepository();
+
+  try {
+    let product = await productRepository.fetch(id);
+
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+
+    product.quantity += quantity;
+    product.modifiedDate = new Date();
+
+    product = await productRepository.save(product);
+
+    res.status(200).json(product);
   } catch (err) {
     next(err);
   }
