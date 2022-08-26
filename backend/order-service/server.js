@@ -20,36 +20,40 @@ app.use(cors());
 
 // JWT Verify Middleware
 const jwtVerify = (req, res, next) => {
-  if (req.headers.authorization) {
-    let token = req.headers["authorization"];
-    if (!token) {
-      return res.status(401).send("Unauthorized");
-    }
-
-    try {
-      token = token.split(" ")[1];
-
-      const isMerchant = req.path.includes("merchant");
-
-      const decoded = isMerchant
-        ? verifyMerchantToken(token)
-        : verifyCustomerToken(token);
-      if (!decoded) {
+  if (!req.path.startsWith("/api/order/email/")) {
+    if (req.headers.authorization) {
+      let token = req.headers["authorization"];
+      if (!token) {
         return res.status(401).send("Unauthorized");
       }
 
-      if (isMerchant) req.body.merchantId = decoded.entityId;
-      else req.body.customerId = decoded.entityId;
+      try {
+        token = token.split(" ")[1];
 
-      next();
-    } catch (err) {
-      if (err.name === "TokenExpiredError") {
-        return res.status(401).send("Token Expired");
+        const isMerchant = req.path.includes("merchant");
+
+        const decoded = isMerchant
+          ? verifyMerchantToken(token)
+          : verifyCustomerToken(token);
+        if (!decoded) {
+          return res.status(401).send("Unauthorized");
+        }
+
+        if (isMerchant) req.body.merchantId = decoded.entityId;
+        else req.body.customerId = decoded.entityId;
+
+        next();
+      } catch (err) {
+        if (err.name === "TokenExpiredError") {
+          return res.status(401).send("Token Expired");
+        }
+        return res.status(401).send("Unauthorized");
       }
+    } else {
       return res.status(401).send("Unauthorized");
     }
   } else {
-    return res.status(401).send("Unauthorized");
+    next();
   }
 };
 
@@ -84,9 +88,19 @@ app.post("/api/order/customer", async (req, res, next) => {
         `${process.env.INVENTORY_SERVICE_URL}/api/product/get/${productId}`
       );
       if (product.data.quantity < quantity) {
-        return res.status(400).send(`${product.name} has not enough stock`);
+        return res
+          .status(400)
+          .send(`${product.data.name} has not enough stock`);
       }
-      orderItems.push({ productId, quantity, price });
+      orderItems.push({
+        productId,
+        productName: product.data.name,
+        productDescription: product.data.description,
+        productCategory: product.data.category,
+        productImages: product.data.images,
+        quantity,
+        price,
+      });
       totalPrice += quantity * price;
     }
 
@@ -107,6 +121,8 @@ app.post("/api/order/customer", async (req, res, next) => {
     };
 
     order = await orderRepository.createAndSave(order);
+
+    console.log(orderItems);
 
     // Create Order Items
     for (let i = 0; i < orderItems.length; i++) {
@@ -138,7 +154,7 @@ app.post("/api/order/customer", async (req, res, next) => {
       address: order.address,
       state: order.state,
       country: order.country,
-      items,
+      items: orderItems,
     };
 
     await connection.xAdd("orders-update", "*", {
@@ -157,6 +173,7 @@ app.get("/api/order/customer", async (req, res, next) => {
   const { customerId } = req.body;
 
   const orderRepository = getOrderRepository();
+  const orderItemsRepository = getOrderItemsRepository();
 
   try {
     const orders = await orderRepository
@@ -166,7 +183,37 @@ app.get("/api/order/customer", async (req, res, next) => {
       .sortBy("createdDate", "DESC")
       .return.all();
 
-    return res.status(200).send(orders);
+    if (orders.length === 0) {
+      return res.status(404).send("No orders found");
+    }
+
+    const response = [];
+
+    for (let i = 0; i < orders.length; i++) {
+      const order = orders[i];
+      const orderItems = await orderItemsRepository
+        .search()
+        .where("orderId")
+        .equals(order.entityId)
+        .return.all();
+
+      response.push({
+        entityId: order.entityId,
+        merchantId: order.merchantId,
+        customerId: order.customerId,
+        status: order.status,
+        price: order.price,
+        name: order.name,
+        phoneNumber: order.phoneNumber,
+        email: order.email,
+        address: order.address,
+        state: order.state,
+        country: order.country,
+        items: orderItems,
+      });
+    }
+
+    return res.status(200).send(response);
   } catch (err) {
     next(err);
   }
@@ -177,6 +224,7 @@ app.get("/api/order/customer/:orderId", async (req, res, next) => {
   const { orderId } = req.params;
 
   const orderRepository = getOrderRepository();
+  const orderItemsRepository = getOrderItemsRepository();
 
   try {
     const order = await orderRepository.fetch(orderId);
@@ -185,7 +233,28 @@ app.get("/api/order/customer/:orderId", async (req, res, next) => {
       return res.status(404).send("Order not found");
     }
 
-    return res.status(200).send(order);
+    const orderItems = await orderItemsRepository
+      .search()
+      .where("orderId")
+      .equals(order.entityId)
+      .return.all();
+
+    const response = {
+      entityId: order.entityId,
+      merchantId: order.merchantId,
+      customerId: order.customerId,
+      status: order.status,
+      price: order.price,
+      name: order.name,
+      phoneNumber: order.phoneNumber,
+      email: order.email,
+      address: order.address,
+      state: order.state,
+      country: order.country,
+      items: orderItems,
+    };
+
+    return res.status(200).send(response);
   } catch (err) {
     next(err);
   }
@@ -196,6 +265,7 @@ app.delete("/api/order/customer/:orderId", async (req, res, next) => {
   const { orderId } = req.params;
 
   const orderRepository = getOrderRepository();
+  const orderItemsRepository = getOrderItemsRepository();
 
   try {
     const order = await orderRepository.fetch(orderId);
@@ -215,7 +285,28 @@ app.delete("/api/order/customer/:orderId", async (req, res, next) => {
       status: order.status,
     });
 
-    return res.status(200).send(order);
+    const orderItems = await orderItemsRepository
+      .search()
+      .where("orderId")
+      .equals(order.entityId)
+      .return.all();
+
+    const response = {
+      entityId: order.entityId,
+      merchantId: order.merchantId,
+      customerId: order.customerId,
+      status: order.status,
+      price: order.price,
+      name: order.name,
+      phoneNumber: order.phoneNumber,
+      email: order.email,
+      address: order.address,
+      state: order.state,
+      country: order.country,
+      items: orderItems,
+    };
+
+    return res.status(200).send(response);
   } catch (err) {
     next(err);
   }
@@ -224,6 +315,7 @@ app.delete("/api/order/customer/:orderId", async (req, res, next) => {
 // Get All Merchant Order
 app.get("/api/order/merchant", async (req, res, next) => {
   const orderRepository = getOrderRepository();
+  const orderItemsRepository = getOrderItemsRepository();
 
   try {
     const orders = await orderRepository
@@ -233,7 +325,37 @@ app.get("/api/order/merchant", async (req, res, next) => {
       .sortBy("createdDate", "DESC")
       .return.all();
 
-    return res.status(200).send(orders);
+    if (orders.length === 0) {
+      return res.status(404).send("No orders found");
+    }
+
+    const response = [];
+
+    for (let i = 0; i < orders.length; i++) {
+      const order = orders[i];
+      const orderItems = await orderItemsRepository
+        .search()
+        .where("orderId")
+        .equals(order.entityId)
+        .return.all();
+
+      response.push({
+        entityId: order.entityId,
+        merchantId: order.merchantId,
+        customerId: order.customerId,
+        status: order.status,
+        price: order.price,
+        name: order.name,
+        phoneNumber: order.phoneNumber,
+        email: order.email,
+        address: order.address,
+        state: order.state,
+        country: order.country,
+        items: orderItems,
+      });
+    }
+
+    return res.status(200).send(response);
   } catch (err) {
     next(err);
   }
@@ -244,6 +366,7 @@ app.get("/api/order/merchant/:orderId", async (req, res, next) => {
   const { orderId } = req.params;
 
   const orderRepository = getOrderRepository();
+  const orderItemsRepository = getOrderItemsRepository();
 
   try {
     const order = await orderRepository.fetch(orderId);
@@ -252,7 +375,28 @@ app.get("/api/order/merchant/:orderId", async (req, res, next) => {
       return res.status(404).send("Order not found");
     }
 
-    return res.status(200).send(order);
+    const orderItems = await orderItemsRepository
+      .search()
+      .where("orderId")
+      .equals(order.entityId)
+      .return.all();
+
+    const response = {
+      entityId: order.entityId,
+      merchantId: order.merchantId,
+      customerId: order.customerId,
+      status: order.status,
+      price: order.price,
+      name: order.name,
+      phoneNumber: order.phoneNumber,
+      email: order.email,
+      address: order.address,
+      state: order.state,
+      country: order.country,
+      items: orderItems,
+    };
+
+    return res.status(200).send(response);
   } catch (err) {
     next(err);
   }
@@ -263,6 +407,7 @@ app.put("/api/order/merchant/:orderId", async (req, res, next) => {
   const { orderId } = req.params;
 
   const orderRepository = getOrderRepository();
+  const orderItemsRepository = getOrderItemsRepository();
 
   try {
     const order = await orderRepository.fetch(orderId);
@@ -282,7 +427,70 @@ app.put("/api/order/merchant/:orderId", async (req, res, next) => {
       status: order.status,
     });
 
-    return res.status(200).send(order);
+    const orderItems = await orderItemsRepository
+      .search()
+      .where("orderId")
+      .equals(order.entityId)
+      .return.all();
+
+    const response = {
+      entityId: order.entityId,
+      merchantId: order.merchantId,
+      customerId: order.customerId,
+      status: order.status,
+      price: order.price,
+      name: order.name,
+      phoneNumber: order.phoneNumber,
+      email: order.email,
+      address: order.address,
+      state: order.state,
+      country: order.country,
+      items: orderItems,
+    };
+
+    return res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Get a order for sending update
+app.get("/api/order/email/:orderId", async (req, res, next) => {
+  const { orderId } = req.params;
+
+  const orderRepository = getOrderRepository();
+  const orderItemsRepository = getOrderItemsRepository();
+
+  try {
+    const order = await orderRepository.fetch(orderId);
+
+    if (!order || !order.merchantId) {
+      return res.status(404).send("Order not found");
+    }
+
+    const orderItems = await orderItemsRepository
+      .search()
+      .where("orderId")
+      .equals(order.entityId)
+      .return.all();
+
+    const response = {
+      entityId: order.entityId,
+      merchantId: order.merchantId,
+      customerId: order.customerId,
+      status: order.status,
+      price: order.price,
+      name: order.name,
+      phoneNumber: order.phoneNumber,
+      email: order.email,
+      address: order.address,
+      state: order.state,
+      country: order.country,
+      items: orderItems,
+      createdDate: order.createdDate,
+    };
+
+    return res.status(200).send(response);
   } catch (err) {
     next(err);
   }

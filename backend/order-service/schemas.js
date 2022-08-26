@@ -15,7 +15,7 @@ const orderSchema = new Schema(Order, {
   address: { type: "string" },
   state: { type: "string" },
   country: { type: "string" },
-  createdDate: { type: "date" },
+  createdDate: { type: "date", sortable: true },
   modifiedDate: { type: "date" },
 });
 
@@ -23,6 +23,10 @@ const orderSchema = new Schema(Order, {
 const orderItemsSchema = new Schema(OrderItems, {
   orderId: { type: "string" },
   productId: { type: "string" },
+  productName: { type: "string" },
+  productDescription: { type: "string" },
+  productCategory: { type: "string" },
+  productImages: { type: "string[]" },
   quantity: { type: "number" },
   price: { type: "number" },
 });

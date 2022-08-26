@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const { getProductRepository } = require("./redis");
+const { getClient, getProductRepository } = require("./redis");
 const { verifyToken } = require("./jwt");
 
 require("dotenv").config();
@@ -243,6 +243,40 @@ app.put("/api/product/stock/:id", async (req, res, next) => {
     product = await productRepository.save(product);
 
     res.status(200).json(product);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Get multiple product by ids
+app.get("/api/product/get", async (req, res, next) => {
+  let { ids } = req.query;
+
+  try {
+    if (!ids) {
+      return res.status(400).send("Bad Request");
+    }
+
+    ids = ids.split(",");
+
+    ids = ids.map((id) => "Product:" + id);
+
+    const client = await getClient();
+
+    const response = await client.execute(["JSON.MGET", ...ids, "$"]);
+
+    const products = [];
+
+    response.forEach((product) => {
+      if (product) {
+        const parsedProduct = JSON.parse(product);
+        if (parsedProduct.length > 0) {
+          products.push(parsedProduct[0]);
+        }
+      }
+    });
+
+    res.status(200).json(products);
   } catch (err) {
     next(err);
   }
