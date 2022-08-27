@@ -3,7 +3,7 @@ import { SnackbarService } from './../../../services/snackbar.service';
 import { AuthService } from './../../../services/auth.service';
 import { MerchantService } from './../../../services/merchant.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
 
-  loginForm: any;
+  loginForm: FormGroup = new FormGroup({});
 
   constructor(private formBuilder: FormBuilder, private merchantService: MerchantService, private authService: AuthService, private snackService: SnackbarService, private router: Router) { }
 

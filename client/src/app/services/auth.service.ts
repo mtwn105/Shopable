@@ -24,4 +24,8 @@ export class AuthService {
     return JSON.parse((localStorage.getItem('user') as string));
   }
 
+  getUserType() {
+    return localStorage.getItem('userType');
+  }
+
 }

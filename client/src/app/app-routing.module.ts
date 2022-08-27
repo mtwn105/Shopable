@@ -1,3 +1,4 @@
+import { AuthGuard } from './guard/auth.guard';
 import { DashboardComponent } from './components/merchant/dashboard/dashboard.component';
 import { RegisterComponent } from './components/merchant/register/register.component';
 import { LoginComponent } from './components/merchant/login/login.component';
@@ -14,18 +15,22 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'merchant/login',
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'merchant/register',
-    component: RegisterComponent
+    component: RegisterComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'merchant/dashboard',
-    component: DashboardComponent
+    component: DashboardComponent,
+    canActivate: [AuthGuard]
   }
 ];
 

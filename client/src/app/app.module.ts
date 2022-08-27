@@ -1,3 +1,6 @@
+import { LoadingService } from './services/loading.service';
+import { AuthService } from './services/auth.service';
+import { JwtInterceptor } from './interceptor/http.interceptor';
 import { InventoryService } from './services/inventory.service';
 import { MerchantService } from './services/merchant.service';
 import { MaterialModule } from './material/material.module';
@@ -14,7 +17,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { InventoryComponent } from './components/merchant/inventory/inventory.component';
 import { AddEditProductComponent } from './components/merchant/inventory/add-edit-product/add-edit-product.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/merchant/dashboard/dashboard.component';
 import { OrdersComponent } from './components/merchant/orders/orders.component';
@@ -46,8 +49,11 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     MerchantService,
-    InventoryService
+    InventoryService,
+    AuthService,
+    LoadingService
   ],
   bootstrap: [AppComponent]
 })

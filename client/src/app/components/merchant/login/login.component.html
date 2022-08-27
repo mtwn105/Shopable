@@ -25,7 +25,12 @@
 </div>
 
 <div class="flex justify-center p-4">
-  <button color="accent" mat-raised-button (click)="login()">
+  <button
+    [disabled]="loginForm.invalid"
+    color="accent"
+    mat-raised-button
+    (click)="login()"
+  >
     Login as Merchant
   </button>
 </div>
