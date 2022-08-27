@@ -125,6 +125,7 @@ app.post("/api/merchant/login", async (req, res, next) => {
 
     res.status(200).json({
       message: "Login successful",
+      merchant,
       token,
     });
   } catch (err) {

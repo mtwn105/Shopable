@@ -16,6 +16,10 @@ import { AddEditProductComponent } from './components/merchant/inventory/add-edi
 import { FooterComponent } from './components/footer/footer.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DashboardComponent } from './components/merchant/dashboard/dashboard.component';
+import { OrdersComponent } from './components/merchant/orders/orders.component';
+import { ViewEditOrderComponent } from './components/merchant/orders/view-edit-order/view-edit-order.component';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NavbarComponent,
     InventoryComponent,
     AddEditProductComponent,
-    FooterComponent
+    FooterComponent,
+    DashboardComponent,
+    OrdersComponent,
+    ViewEditOrderComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +45,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule
   ],
   providers: [
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     MerchantService,
     InventoryService
   ],
