@@ -1,42 +1,20 @@
 <mat-toolbar color="primary">
-  <span>Dashboard</span>
-</mat-toolbar>
+  <span>{{ title }}</span>
 
-<div class="flex justify-center p-4">
-  <div class="m-1 grow">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Inventory</mat-card-title>
-        <mat-card-subtitle>Manage your products</mat-card-subtitle>
-      </mat-card-header>
-      <!-- <img matCardImage src="Card wide image source"> -->
-      <!-- <mat-card-content>
-            Text content
-        </mat-card-content> -->
-    </mat-card>
-  </div>
-  <div class="m-1 grow">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Orders</mat-card-title>
-        <mat-card-subtitle>View/manage your orders</mat-card-subtitle>
-      </mat-card-header>
-      <!-- <img matCardImage src="Card wide image source"> -->
-      <!-- <mat-card-content>
-            Text content
-        </mat-card-content> -->
-    </mat-card>
-  </div>
-  <div class="m-1 grow">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Account</mat-card-title>
-        <mat-card-subtitle>Manage your account</mat-card-subtitle>
-      </mat-card-header>
-      <!-- <img matCardImage src="Card wide image source"> -->
-      <!-- <mat-card-content>
-            Text content
-        </mat-card-content> -->
-    </mat-card>
-  </div>
-</div>
+  <span class="spacer"></span>
+
+  <ng-container *ngIf="!!user">
+    <button mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>account_circle</mat-icon>
+
+      {{ user?.name }}
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <button (click)="logout()" mat-menu-item>
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </ng-container>
+</mat-toolbar>

@@ -14,7 +14,8 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    if (this.authService.getAuthToken()) {
+    if (!!this.authService.getAuthToken()) {
+
 
       if ((state.url.includes("login") || state.url.includes("register") || (state.url.includes("home")) && this.authService.getUserType() == "MERCHANT")) {
         this.router.navigate(['/merchant/dashboard']);
@@ -27,11 +28,14 @@ export class AuthGuard implements CanActivate {
       // }
 
       if (state.url.includes("merchant") && this.authService.getUserType() != "MERCHANT") {
+        this.router.navigate(['/merchant/login']);
         return false;
       }
 
       return true;
     } else {
+
+      this.router.navigate(['/merchant/login']);
       return false;
     }
   }

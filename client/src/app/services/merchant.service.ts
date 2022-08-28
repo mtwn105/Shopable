@@ -16,8 +16,8 @@ export class MerchantService {
     return this.http.post(`${this.merchantApi}/login`, { email, password });
   }
 
-  getMerchant() {
-    return this.http.get(`${this.merchantApi}`);
+  getMerchant(merchantId: string) {
+    return this.http.get(`${this.merchantApi}/${merchantId}`);
   }
 
 }

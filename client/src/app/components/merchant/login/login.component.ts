@@ -18,6 +18,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
 
+    if (this.authService.getAuthToken()) {
+      this.router.navigate(['/merchant/dashboard']);
+    }
+
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]

@@ -18,8 +18,7 @@ app.use(cors());
 app.post("/api/merchant", async (req, res, next) => {
   try {
     const {
-      firstName,
-      lastName,
+      name,
       email,
       password,
       address,
@@ -49,13 +48,12 @@ app.post("/api/merchant", async (req, res, next) => {
     }
 
     // Check if basic fields are present
-    if (!firstName || !lastName || !email || !password) {
+    if (!name || !email || !password) {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
 
     merchant = {
-      firstName,
-      lastName,
+      name,
       email,
       password,
       address,

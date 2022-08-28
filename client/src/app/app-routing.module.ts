@@ -15,17 +15,14 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
-    canActivate: [AuthGuard]
   },
   {
     path: 'merchant/login',
     component: LoginComponent,
-    canActivate: [AuthGuard]
   },
   {
     path: 'merchant/register',
     component: RegisterComponent,
-    canActivate: [AuthGuard]
   },
   {
     path: 'merchant/dashboard',

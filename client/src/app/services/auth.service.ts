@@ -12,7 +12,7 @@ export class AuthService {
   }
 
   getAuthToken() {
-    return localStorage.getItem('authToken');
+    return localStorage.getItem('authToken') ?? null;
   }
 
   setUserDetails(user: any, userType: string) {
@@ -26,6 +26,12 @@ export class AuthService {
 
   getUserType() {
     return localStorage.getItem('userType');
+  }
+
+  logout() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('userType');
   }
 
 }
