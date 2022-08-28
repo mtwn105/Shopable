@@ -14,14 +14,9 @@ export class DashboardComponent implements OnInit {
   merchant: any;
 
   constructor(private merchantService: MerchantService, private authService: AuthService,
-    private snackbarService: SnackbarService, private router: Router) { }
+    private snackbarService: SnackbarService, public router: Router) { }
 
   ngOnInit(): void {
-
-
-    if (this.authService.getAuthToken()) {
-      this.router.navigate(['/merchant/dashboard']);
-    }
 
     this.getMerchant();
   }

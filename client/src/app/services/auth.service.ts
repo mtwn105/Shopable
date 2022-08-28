@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
+  user: any;
+
   constructor(
     private router: Router
   ) { }

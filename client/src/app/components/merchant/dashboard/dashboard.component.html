@@ -2,7 +2,11 @@
 
 <div class="flex justify-center p-4">
   <div class="m-1 grow">
-    <mat-card matRipple class="clickable">
+    <mat-card
+      (click)="router.navigate(['/merchant/inventory'])"
+      matRipple
+      class="clickable"
+    >
       <mat-card-header>
         <mat-card-title>Inventory</mat-card-title>
         <mat-card-subtitle>Manage your products</mat-card-subtitle>
@@ -14,7 +18,11 @@
     </mat-card>
   </div>
   <div class="m-1 grow">
-    <mat-card matRipple class="clickable">
+    <mat-card
+      (click)="router.navigate(['/merchant/orders'])"
+      matRipple
+      class="clickable"
+    >
       <mat-card-header>
         <mat-card-title>Orders</mat-card-title>
         <mat-card-subtitle>View/manage your orders</mat-card-subtitle>
@@ -26,7 +34,11 @@
     </mat-card>
   </div>
   <div class="m-1 grow">
-    <mat-card matRipple class="clickable">
+    <mat-card
+      (click)="router.navigate(['/merchant/account'])"
+      matRipple
+      class="clickable"
+    >
       <mat-card-header>
         <mat-card-title>Account</mat-card-title>
         <mat-card-subtitle>Manage your account</mat-card-subtitle>

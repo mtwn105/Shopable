@@ -1,1 +1,41 @@
-<p>inventory works!</p>
+<app-navbar
+  title="Inventory"
+  [user]="merchant"
+  [showBackButton]="true"
+  backRoute="/merchant/dashboard"
+>
+</app-navbar>
+
+<div *ngIf="!!products && products.length > 0">
+  <div class="flex justify-between px-4 pt-4 align-middle">
+    <p class="mx-0 my-auto align-middle font-bold">
+      {{ products.length }} Products
+    </p>
+    <button color="accent" mat-raised-button (click)="addProduct()">
+      Add a Product
+    </button>
+  </div>
+  <div class="grid grid-cols-3 p-4">
+    <div *ngFor="let product of products" class="m-1">
+      <mat-card (click)="editProduct(product)" matRipple class="clickable">
+        <mat-card-header class="ml-0">
+          <mat-card-title>{{ product.name }}</mat-card-title>
+          <mat-card-subtitle>{{
+            product.discountPrice | currency: "INR"
+          }}</mat-card-subtitle>
+        </mat-card-header>
+        <!-- <img matCardImage src="Card wide image source"> -->
+        <mat-card-content>
+          <p class="font-bold">{{ product.category }}</p>
+          {{ product.description }}
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<div class="text-center p-4" *ngIf="!products || products.length == 0">
+  <p class="text-2xl mb-2 font-bold">No Products Present</p>
+  <button color="accent" mat-raised-button (click)="addProduct()">
+    Add a Product
+  </button>
+</div>

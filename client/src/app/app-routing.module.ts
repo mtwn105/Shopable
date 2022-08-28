@@ -1,3 +1,6 @@
+import { AddEditProductComponent } from './components/merchant/inventory/add-edit-product/add-edit-product.component';
+import { OrdersComponent } from './components/merchant/orders/orders.component';
+import { InventoryComponent } from './components/merchant/inventory/inventory.component';
 import { AuthGuard } from './guard/auth.guard';
 import { DashboardComponent } from './components/merchant/dashboard/dashboard.component';
 import { RegisterComponent } from './components/merchant/register/register.component';
@@ -27,6 +30,26 @@ const routes: Routes = [
   {
     path: 'merchant/dashboard',
     component: DashboardComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'merchant/inventory',
+    component: InventoryComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'merchant/inventory/product/:id',
+    component: AddEditProductComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'merchant/inventory/product',
+    component: AddEditProductComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'merchant/orders',
+    component: OrdersComponent,
     canActivate: [AuthGuard]
   }
 ];

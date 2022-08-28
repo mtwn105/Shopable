@@ -1,4 +1,8 @@
 <mat-toolbar color="primary">
+  <button (click)="back()" *ngIf="showBackButton" mat-button>
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
   <span>{{ title }}</span>
 
   <span class="spacer"></span>

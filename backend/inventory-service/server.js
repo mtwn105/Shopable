@@ -140,7 +140,7 @@ app.put("/api/product/update/:id", async (req, res, next) => {
     product.description = description;
     product.category = category;
     product.discountPrice = discountPrice;
-    product.images = images;
+    product.images = images ?? null;
     product.price = price;
     product.quantity = quantity;
     product.modifiedDate = new Date();
@@ -191,6 +191,7 @@ app.get("/api/product/all/:merchantId", async (req, res, next) => {
       .search()
       .where("merchantId")
       .equals(merchantId)
+      .sortBy("createdDate", "desc")
       .return.all();
 
     res.status(200).json(products);
