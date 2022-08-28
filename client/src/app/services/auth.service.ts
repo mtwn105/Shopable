@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -5,7 +6,9 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   setAuthToken(token: string) {
     localStorage.setItem('authToken', token);
@@ -32,6 +35,9 @@ export class AuthService {
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
     localStorage.removeItem('userType');
+    if (this.router.url.includes('merchant')) {
+      this.router.navigate(['/merchant/login']);
+    }
   }
 
 }

@@ -9,7 +9,10 @@ export class SnackbarService {
   constructor(private _snackBar: MatSnackBar) { }
 
   openSnackBar(message: string) {
-    this._snackBar.open(message);
+    if (message)
+      this._snackBar.open(message);
+    else
+      this._snackBar.open("Something went wrong. Please try again.");
   }
 
 }
