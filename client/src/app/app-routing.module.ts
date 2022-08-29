@@ -1,3 +1,4 @@
+import { CartComponent } from './components/store/cart/cart.component';
 import { ProductComponent } from './components/store/product/product.component';
 import { RegisterComponent as StoreRegisterComponent } from './components/store/register/register.component';
 import { LoginComponent as StoreLoginComponent } from './components/store/login/login.component';
@@ -67,6 +68,10 @@ const routes: Routes = [
   {
     path: 'store/:id/register',
     component: StoreRegisterComponent,
+  },
+  {
+    path: 'store/:id/cart',
+    component: CartComponent,
   },
   {
     path: 'store/:id/product/:productId',

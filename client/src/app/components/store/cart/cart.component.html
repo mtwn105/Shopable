@@ -1,0 +1,68 @@
+<app-navbar
+  title="Cart"
+  [user]="user"
+  [showBackButton]="true"
+  userType="CUSTOMER"
+  backRoute="/store/{{ shopUniqueName }}"
+  [shopUniqueName]="shopUniqueName"
+>
+</app-navbar>
+
+<div class="p-4">
+  <ng-container *ngIf="!!cart && !!cart.items && cart.items.length > 0">
+    <p class="mx-0 my-auto align-middle font-bold">
+      {{ cart.items.length }} Products
+    </p>
+    <div *ngFor="let product of cart.items" class="m-1">
+      <mat-card (click)="viewProduct(product)" matRipple class="clickable">
+        <mat-card-content>
+          <div class="flex justify-between">
+            <div>
+              <p class="font-bold text-xl m-0">
+                {{ product.productName }}
+              </p>
+              <p class="font-bold m-0">{{ product.productCategory }}</p>
+              <p class="text-lg m-0">
+                {{ product.price | currency: "INR" }} x {{ product.quantity }}
+              </p>
+            </div>
+            <div class="flex justify-center items-center">
+              <p class="font-bold text-green-500 text-xl m-0">
+                {{ product.totalPrice | currency: "INR" }}
+              </p>
+              <button
+                color="accent"
+                (click)="removeFromCart(product)"
+                mat-button
+                class=""
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="flex justify-between p-2">
+      <p class="font-bold text-xl m-0">Total:</p>
+      <div class="flex text-end items-center">
+        <p class="font-bold text-green-500 text-2xl m-0">
+          {{ cart.totalPrice | currency: "INR" }}
+        </p>
+        <button
+          class="mr-2"
+          color="accent"
+          mat-raised-button
+          (click)="placeOrder()"
+        >
+          Place Order
+        </button>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!cart || !cart.items || cart.items.length == 0">
+    <div class="text-center p-4">
+      <p class="text-2xl mb-2 font-bold">Your Cart is empty</p>
+    </div>
+  </ng-container>
+</div>

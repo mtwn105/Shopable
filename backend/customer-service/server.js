@@ -85,7 +85,7 @@ app.post("/api/customer/register", async (req, res, next) => {
       .first();
 
     if (customer) {
-      return res.status(409).send("Customer already exists");
+      return res.status(409).send({ message: "Customer already exists" });
     }
 
     // Encrypt password using bcrypt
@@ -132,7 +132,7 @@ app.post("/api/customer/login", async (req, res, next) => {
     // Check if password is correct
     const isPasswordCorrect = await bcrypt.compare(password, customer.password);
     if (!isPasswordCorrect) {
-      return res.status(401).send("Incorrect password");
+      return res.status(401).send({ message: "Incorrect password" });
     }
 
     // Create JWT
@@ -158,7 +158,7 @@ app.get("/api/customer/:id", async (req, res, next) => {
     const customer = await customerRepository.fetch(id);
 
     if (!customer) {
-      return res.status(404).send("Customer not found");
+      return res.status(404).send({ message: "Customer not found" });
     } else {
       return res.status(200).send(customer);
     }
@@ -177,7 +177,7 @@ app.put("/api/customer/:id", async (req, res, next) => {
     const customer = await customerRepository.fetch(id);
 
     if (!customer) {
-      return res.status(404).send("Customer not found");
+      return res.status(404).send({ message: "Customer not found" });
     }
 
     const { name, phoneNumber, email, password } = req.body;
@@ -254,8 +254,11 @@ app.get("/api/customer/cart/:id", async (req, res, next) => {
 
         cartItems.push({
           productId: cartItem.productId,
+          productName: product.name,
+          productCategory: product.category,
           quantity: cartItem.quantity,
           price: product.discountPrice,
+          totalPrice: cartItem.quantity * product.discountPrice,
         });
 
         totalPrice += product.discountPrice * cartItem.quantity;
@@ -409,7 +412,7 @@ app.post("/api/customer/cart/:id", async (req, res, next) => {
         await cartRepository.save(cart);
       }
 
-      return res.status(200).send("Added to cart");
+      return res.status(200).send({ message: "Added to cart" });
     }
   } catch (err) {
     next(err);

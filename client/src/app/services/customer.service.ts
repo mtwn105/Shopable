@@ -23,4 +23,12 @@ export class CustomerService {
     return this.http.post(`${this.customerApi}/cart/${customerId}`, { productId });
   }
 
+  getCart(customerId: string) {
+    return this.http.get(`${this.customerApi}/cart/${customerId}`);
+  }
+
+  updateCart(customerId: string, cart: any) {
+    return this.http.put(`${this.customerApi}/cart/${customerId}`, cart);
+  }
+
 }

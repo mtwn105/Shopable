@@ -28,6 +28,7 @@ import { ViewEditOrderComponent } from './components/merchant/orders/view-edit-o
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ProductComponent } from './components/store/product/product.component';
 import { MatCarouselModule } from '@ngmodule/material-carousel';
+import { CartComponent } from './components/store/cart/cart.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +45,8 @@ import { MatCarouselModule } from '@ngmodule/material-carousel';
     StoreHomeComponent,
     StoreLoginComponent,
     StoreRegisterComponent,
-    ProductComponent
+    ProductComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,
