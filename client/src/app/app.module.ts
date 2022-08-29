@@ -29,6 +29,8 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ProductComponent } from './components/store/product/product.component';
 import { MatCarouselModule } from '@ngmodule/material-carousel';
 import { CartComponent } from './components/store/cart/cart.component';
+import { PlaceOrderComponent } from './components/store/cart/place-order/place-order.component';
+import { CustomerOrdersComponent } from './components/store/customer-orders/customer-orders.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +48,9 @@ import { CartComponent } from './components/store/cart/cart.component';
     StoreLoginComponent,
     StoreRegisterComponent,
     ProductComponent,
-    CartComponent
+    CartComponent,
+    PlaceOrderComponent,
+    CustomerOrdersComponent
   ],
   imports: [
     BrowserModule,

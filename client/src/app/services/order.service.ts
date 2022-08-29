@@ -15,4 +15,11 @@ export class OrderService {
   getMerchantOrders() {
     return this.http.get(`${this.orderApi}/merchant`);
   }
+
+  getCustomerOrders() { return this.http.get(`${this.orderApi}/customer`); }
+
+  placeOrder(order: any) {
+    return this.http.post(`${this.orderApi}/customer`, order);
+  }
+
 }

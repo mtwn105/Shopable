@@ -1,3 +1,5 @@
+import { CustomerOrdersComponent } from './components/store/customer-orders/customer-orders.component';
+import { PlaceOrderComponent } from './components/store/cart/place-order/place-order.component';
 import { CartComponent } from './components/store/cart/cart.component';
 import { ProductComponent } from './components/store/product/product.component';
 import { RegisterComponent as StoreRegisterComponent } from './components/store/register/register.component';
@@ -72,6 +74,14 @@ const routes: Routes = [
   {
     path: 'store/:id/cart',
     component: CartComponent,
+  },
+  {
+    path: 'store/:id/checkout',
+    component: PlaceOrderComponent,
+  },
+  {
+    path: 'store/:id/orders',
+    component: CustomerOrdersComponent,
   },
   {
     path: 'store/:id/product/:productId',

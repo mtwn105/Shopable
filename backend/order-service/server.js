@@ -220,6 +220,8 @@ app.get("/api/order/customer", async (req, res, next) => {
         state: order.state,
         country: order.country,
         items: orderItems,
+        createdDate: order.createdDate,
+        modifiedDate: order.modifiedDate,
       });
     }
 
@@ -262,6 +264,8 @@ app.get("/api/order/customer/:orderId", async (req, res, next) => {
       state: order.state,
       country: order.country,
       items: orderItems,
+      createdDate: order.createdDate,
+      modifiedDate: order.modifiedDate,
     };
 
     return res.status(200).send(response);
@@ -314,6 +318,8 @@ app.delete("/api/order/customer/:orderId", async (req, res, next) => {
       state: order.state,
       country: order.country,
       items: orderItems,
+      createdDate: order.createdDate,
+      modifiedDate: order.modifiedDate,
     };
 
     return res.status(200).send(response);
@@ -362,6 +368,8 @@ app.get("/api/order/merchant", async (req, res, next) => {
         state: order.state,
         country: order.country,
         items: orderItems,
+        createdDate: order.createdDate,
+        modifiedDate: order.modifiedDate,
       });
     }
 
@@ -404,6 +412,8 @@ app.get("/api/order/merchant/:orderId", async (req, res, next) => {
       state: order.state,
       country: order.country,
       items: orderItems,
+      createdDate: order.createdDate,
+      modifiedDate: order.modifiedDate,
     };
 
     return res.status(200).send(response);
@@ -456,6 +466,8 @@ app.put("/api/order/merchant/:orderId", async (req, res, next) => {
       state: order.state,
       country: order.country,
       items: orderItems,
+      createdDate: order.createdDate,
+      modifiedDate: order.modifiedDate,
     };
 
     return res.status(200).send(response);
@@ -498,6 +510,7 @@ app.get("/api/order/email/:orderId", async (req, res, next) => {
       country: order.country,
       items: orderItems,
       createdDate: order.createdDate,
+      modifiedDate: order.modifiedDate,
     };
 
     return res.status(200).send(response);

@@ -1,5 +1,6 @@
+import { OrderService } from './../../../../services/order.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { CustomerService } from 'src/app/services/customer.service';
@@ -8,11 +9,11 @@ import { MerchantService } from 'src/app/services/merchant.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 
 @Component({
-  selector: 'app-cart',
-  templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.scss']
+  selector: 'app-place-order',
+  templateUrl: './place-order.component.html',
+  styleUrls: ['./place-order.component.scss']
 })
-export class CartComponent implements OnInit {
+export class PlaceOrderComponent implements OnInit {
 
   product: any;
   shopUniqueName: any;
@@ -21,8 +22,9 @@ export class CartComponent implements OnInit {
   user: any;
   addedToCart = false;
   cart: any;
+  orderForm: any;
 
-  constructor(private formBuilder: FormBuilder, private merchantService: MerchantService, private authService: AuthService, private snackbarService: SnackbarService, private router: Router, private activatedRoute: ActivatedRoute, private customerService: CustomerService, private inventoryService: InventoryService) { }
+  constructor(private formBuilder: FormBuilder, private merchantService: MerchantService, private authService: AuthService, private snackbarService: SnackbarService, private router: Router, private activatedRoute: ActivatedRoute, private customerService: CustomerService, private orderService: OrderService) { }
 
   ngOnInit(): void {
 
@@ -32,6 +34,16 @@ export class CartComponent implements OnInit {
       this.shopUniqueName = this.activatedRoute.snapshot.paramMap.get("id");
       this.getShop();
     }
+
+    this.orderForm = this.formBuilder.group({
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      address: ['', [Validators.required]],
+      state: ['', [Validators.required]],
+      zip: ['', [Validators.required, Validators.minLength(6)]],
+      country: ['', [Validators.required]],
+      phoneNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+    });
 
     this.getCart();
 
@@ -70,44 +82,39 @@ export class CartComponent implements OnInit {
     );
   }
 
-  addToCart() {
-    this.customerService.addToCart(this.user.entityId, this.productId).subscribe(
-      (response: any) => {
-        this.snackbarService.openSnackBar("Product added to cart");
-        this.addedToCart = true;
-      },
-      (error: any) => {
-        if (error.status == 401) {
-          this.authService.logout(this.shopUniqueName);
-          this.snackbarService.openSnackBar("Your session has expired. Please login again.");
-        } else {
-          this.snackbarService.openSnackBar(error.error.message);
-        }
-      }
-    );
-  }
-
   viewProduct(product: any) {
 
     this.router.navigate(['/store/' + this.shopUniqueName + '/product/' + product.productId]);
   }
 
-  checkout() {
-    this.router.navigate(['/store/' + this.shopUniqueName + '/checkout']);
-  }
+  placeOrder() {
+    this.orderForm.value.phoneNumber = +this.orderForm.value.phoneNumber;
 
-  removeFromCart(product: any) {
+    this.orderForm.value.merchantId = this.shop.merchantId;
+    this.orderForm.value.customerId = this.user.entityId;
 
-    this.cart.items.forEach((item: any, index: any) => {
-      if (item.productId == product.productId) {
-        this.cart.items.splice(index, 1);
-      }
-    });
+    this.orderForm.value.items = this.cart.items;
 
-    this.customerService.updateCart(this.user.entityId, this.cart).subscribe(
+    this.orderService.placeOrder(this.orderForm.value).subscribe(
       (response: any) => {
-        this.snackbarService.openSnackBar("Product removed from cart");
-        this.getCart();
+
+        this.cart.items = [];
+
+        this.customerService.updateCart(this.user.entityId, this.cart).subscribe(
+          (response: any) => {
+
+            this.snackbarService.openSnackBar("Order placed successfully");
+            this.router.navigate(['/store/' + this.shopUniqueName + '/orders']);
+          },
+          (error: any) => {
+            if (error.status == 401) {
+              this.authService.logout(this.shopUniqueName);
+              this.snackbarService.openSnackBar("Your session has expired. Please login again.");
+            } else {
+              this.snackbarService.openSnackBar(error.error.message);
+            }
+          }
+        );
       },
       (error: any) => {
         if (error.status == 401) {
@@ -118,6 +125,7 @@ export class CartComponent implements OnInit {
         }
       }
     );
+
   }
 
 }
