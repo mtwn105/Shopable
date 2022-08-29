@@ -1,0 +1,23 @@
+{
+    "app_name": "Shoppable",  //Name of the app
+    "description": "A platform to create e-commerce store for everyone", // One line description
+    "hidden": false, // Can be "true" or "false". If true, this app won't show up in Launchpad.
+    "rank": 21, // This is used to sort the apps in the marketplace. 1 to 20 are reserved. Enter greater than 20
+    "type": "Full App", //Can be "Building Block" or "Full App"
+    "contributed_by": "Community", // Can be "Redis Labs" or "Community" or "Partner"
+    "repo_url": "https://github.com/mtwn105/Shopable", //This is the Gitub Repo's URL.
+    "download_url": "https://github.com/mtwn105/Shopable/archive/main.zip",
+    "hosted_url": "https://shoppable.amitwani.dev", //The URL of the app. if you are hosting this app somewhere
+    "language": ["JavaScript"], // Backend technologies: "JavaScript", "Java", "Python", "Go", "C#", "Ruby", "PHP", etc. 
+    "redis_commands": ["JSON.SET", "XADD", "XRANGE"], // Enter all the Redis commands
+    "redis_features": [],// Enter any core Redis feature or leave it blank.
+    "redis_modules": ["RediJSON","RediSearch"], //Value can be one or more of "RediJSON", "RediSearch", "RedisTimeseries", "RedisAI"  "RedisGears" or "RedisGraph" listed in an array. 
+    "app_image_urls": [
+        "https://user-images.githubusercontent.com/12975481/187288703-1ff8c94f-75d7-4547-b86d-f01959a9511f.png",
+      "https://user-images.githubusercontent.com/12975481/187291224-8f99a51d-ca8b-4f3c-b312-b051ebcf636c.png"
+    ], // Provide any image urls in an array.
+    "youtube_url": "", //Provide a Youtube link to your app's video
+    "special_tags": ["Hackathon"], // "Hackathon", "Paid", or any event names.
+    "verticals": ["Retail", "Financial"], // Can be: "Healthcare", "Financial", "Tourism", "Retail", "Oil & Gas", "Manufacturing", "Technology","Education", "Construction"  
+    "markdown": "https://raw.githubusercontent.com/mtwn105/Shopable/main/README.md" // Link to the RAW Markdown.
+}
