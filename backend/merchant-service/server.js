@@ -15,7 +15,7 @@ app.use(morgan("tiny"));
 app.use(cors());
 
 // Register a Merchant
-app.post("/api/merchant", async (req, res, next) => {
+app.post("/api/merchant/", async (req, res, next) => {
   try {
     const {
       name,

@@ -17,7 +17,7 @@ export class MerchantService {
   }
 
   register(merchant: any) {
-    return this.http.post(`${this.merchantApi}`, merchant);
+    return this.http.post(`${this.merchantApi}/`, merchant);
   }
 
   getMerchant(merchantId: string) {
