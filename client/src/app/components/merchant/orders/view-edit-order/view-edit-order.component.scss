@@ -1,0 +1,18 @@
+@import '~@angular/material/theming';
+
+.clickable:hover {
+  @include mat-elevation(8);
+  cursor: pointer;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  margin: 1rem;
+}
+
+.mat-form-field-wrapper {
+  padding-bottom: 0;
+}

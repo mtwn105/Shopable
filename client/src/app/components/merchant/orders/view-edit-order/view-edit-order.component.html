@@ -1,1 +1,92 @@
-<p>view-edit-order works!</p>
+<app-navbar
+  title="View Order"
+  [user]="merchant"
+  [showBackButton]="true"
+  userType="MERCHANT"
+  backRoute="/merchant/orders"
+>
+</app-navbar>
+
+<div class="p-4">
+  <div class="p-2">
+    <p class="font-bold text-2xl">Order: {{ order?.entityId }}</p>
+
+    <p class="font-bold m-0">{{ order.items.length }} items</p>
+    <div
+      *ngIf="order.status != 'CANCELLED' && order.status != 'DELIVERED'"
+      class="flex items-center"
+    >
+      <form class="pr-2">
+        <mat-form-field class="pb-0" appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="status" name="food">
+            <mat-option *ngFor="let status of statuses" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      <button
+        *ngIf="order.status != 'CANCELLED' && order.status != 'DELIVERED'"
+        color="accent"
+        mat-raised-button
+        (click)="updateOrder()"
+      >
+        Update Status
+      </button>
+    </div>
+    <p
+      *ngIf="order.status == 'CANCELLED' || order.status == 'DELIVERED'"
+      class="font-bold m-0"
+    >
+      Status: {{ order.status }}
+    </p>
+
+    <p class="text-gray-500 m-0">
+      Placed on: {{ order.createdDate | date }} {{ " | " }} Updated on:
+      {{ order.modifiedDate | date }}
+    </p>
+  </div>
+
+  <div *ngFor="let product of order.items" class="m-1">
+    <mat-card (click)="viewProduct(product)" matRipple class="clickable">
+      <mat-card-content>
+        <div class="flex justify-between">
+          <div>
+            <p class="font-bold text-lg m-0">
+              {{ product.productName }}
+            </p>
+            <p class="font-bold text-xs m-0">{{ product.productCategory }}</p>
+            <p class="text-sm m-0">
+              {{ product.price / product.quantity | currency: "INR" }} x
+              {{ product.quantity }}
+            </p>
+          </div>
+          <div class="flex justify-center items-center">
+            <p class="font-bold text-green-500 text-lg m-0">
+              {{ product.price | currency: "INR" }}
+            </p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="flex justify-between p-2">
+    <p class="font-bold text-xl m-0">Total:</p>
+    <div class="flex text-end items-center">
+      <p class="font-bold text-green-500 text-2xl m-0">
+        {{ order.price | currency: "INR" }}
+      </p>
+    </div>
+  </div>
+
+  <div class="p-2">
+    <p class="font-bold text-xl">Order Details:</p>
+    <p>Name: {{ order.name }}</p>
+    <p>Email: {{ order.email }}</p>
+    <p>Phone: {{ order.phoneNumber }}</p>
+    <p>Address: {{ order.address }}</p>
+    <p>City: {{ order.city }}</p>
+    <p>State: {{ order.state }}</p>
+  </div>
+</div>

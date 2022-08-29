@@ -7,30 +7,34 @@
 >
 </app-navbar>
 
-<div *ngIf="!!orders && orders.length > 0">
-  <div class="flex justify-between px-4 pt-4 align-middle">
-    <p class="mx-0 my-auto align-middle font-bold">
-      {{ orders.length }} Orders
-    </p>
-  </div>
-  <div class="grid grid-cols-3 p-4">
+<div class="p-4">
+  <ng-container *ngIf="!!orders && orders.length > 0">
     <div *ngFor="let order of orders" class="m-1">
       <mat-card (click)="editOrder(order)" matRipple class="clickable">
-        <mat-card-header class="ml-0">
-          <mat-card-title>{{ order.name }}</mat-card-title>
-          <mat-card-subtitle>{{
-            order.discountPrice | currency: "INR"
-          }}</mat-card-subtitle>
-        </mat-card-header>
-        <!-- <img matCardImage src="Card wide image source"> -->
         <mat-card-content>
-          <p class="font-bold">{{ order.category }}</p>
-          {{ order.description }}
+          <div class="flex justify-between">
+            <div>
+              <p class="font-bold text-xl m-0">Order: {{ order.entityId }}</p>
+              <p class="font-bold m-0">{{ order.items.length }} items</p>
+              <p class="font-bold m-0">Status: {{ order.status }}</p>
+              <p class="text-gray-500 m-0">
+                Placed on: {{ order.createdDate | date }} {{ " | " }} Updated
+                on: {{ order.modifiedDate | date }}
+              </p>
+            </div>
+            <div class="flex justify-center items-center">
+              <p class="font-bold text-green-500 text-xl m-0">
+                {{ order.price | currency: "INR" }}
+              </p>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
-  </div>
-</div>
-<div class="text-center p-4" *ngIf="!orders || orders.length == 0">
-  <p class="text-2xl mb-2 font-bold">No Orders Present</p>
+  </ng-container>
+  <ng-container *ngIf="!orders || orders.length == 0">
+    <div class="text-center p-4">
+      <p class="text-2xl mb-2 font-bold">No orders found</p>
+    </div>
+  </ng-container>
 </div>

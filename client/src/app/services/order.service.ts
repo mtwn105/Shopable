@@ -26,8 +26,16 @@ export class OrderService {
     return this.http.get(`${this.orderApi}/customer/${orderId}`);
   }
 
+  getMerchantOrder(orderId: string) {
+    return this.http.get(`${this.orderApi}/merchant/${orderId}`);
+  }
+
   cancelCustomerOrder(orderId: string) {
     return this.http.delete(`${this.orderApi}/customer/${orderId}`);
+  }
+
+  updateOrder(order: any) {
+    return this.http.put(`${this.orderApi}/merchant/${order.entityId}`, order);
   }
 
 }

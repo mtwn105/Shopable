@@ -1,3 +1,4 @@
+
 import { ViewOrderComponent } from './components/store/customer-orders/view-order/view-order.component';
 import { CustomerOrdersComponent } from './components/store/customer-orders/customer-orders.component';
 import { PlaceOrderComponent } from './components/store/cart/place-order/place-order.component';
@@ -16,6 +17,7 @@ import { LoginComponent } from './components/merchant/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ViewEditOrderComponent } from './components/merchant/orders/view-edit-order/view-edit-order.component';
 
 const routes: Routes = [
   {
@@ -58,6 +60,11 @@ const routes: Routes = [
   {
     path: 'merchant/orders',
     component: OrdersComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'merchant/orders/:orderId',
+    component: ViewEditOrderComponent,
     canActivate: [AuthGuard]
   },
   {

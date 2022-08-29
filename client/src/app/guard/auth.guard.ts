@@ -34,8 +34,15 @@ export class AuthGuard implements CanActivate {
 
       return true;
     } else {
-
-      this.router.navigate(['/merchant/login']);
+      if (state.url.includes("merchant")) {
+        this.router.navigate(['/merchant/login']);
+        return false;
+      }
+      if (state.url.includes("store")) {
+        console.log(this.authService.getStore());
+        this.router.navigate(['/store/' + this.authService.getStore() + '/login']);
+        return false;
+      }
       return false;
     }
   }

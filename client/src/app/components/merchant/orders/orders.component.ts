@@ -60,7 +60,7 @@ export class OrdersComponent implements OnInit {
   }
 
   editOrder(order: any) {
-    this.router.navigate(['/merchant/orders/order/' + order.entityId]);
+    this.router.navigate(['/merchant/orders/' + order.entityId]);
   }
 
 }
