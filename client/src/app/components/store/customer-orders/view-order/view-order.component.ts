@@ -1,24 +1,24 @@
-import { OrderService } from './../../../services/order.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { CustomerService } from 'src/app/services/customer.service';
-import { InventoryService } from 'src/app/services/inventory.service';
 import { MerchantService } from 'src/app/services/merchant.service';
+import { OrderService } from 'src/app/services/order.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 
 @Component({
-  selector: 'app-customer-orders',
-  templateUrl: './customer-orders.component.html',
-  styleUrls: ['./customer-orders.component.scss']
+  selector: 'app-view-order',
+  templateUrl: './view-order.component.html',
+  styleUrls: ['./view-order.component.scss']
 })
-export class CustomerOrdersComponent implements OnInit {
+export class ViewOrderComponent implements OnInit {
 
   shopUniqueName: any;
   shop: any;
   user: any;
-  orders: any;
+  order: any;
+  orderId: any;
 
   constructor(private formBuilder: FormBuilder, private merchantService: MerchantService, private authService: AuthService, private snackbarService: SnackbarService, private router: Router, private activatedRoute: ActivatedRoute, private customerService: CustomerService, private orderService: OrderService) { }
 
@@ -30,9 +30,10 @@ export class CustomerOrdersComponent implements OnInit {
       this.shopUniqueName = this.activatedRoute.snapshot.paramMap.get("id");
       this.getShop();
     }
-
-    this.getOrders();
-
+    if (!!this.activatedRoute.snapshot.paramMap.get("orderId")) {
+      this.orderId = this.activatedRoute.snapshot.paramMap.get("orderId");
+      this.getOrder();
+    }
   }
 
   getShop() {
@@ -52,10 +53,10 @@ export class CustomerOrdersComponent implements OnInit {
     );
   }
 
-  getOrders() {
-    this.orderService.getCustomerOrders().subscribe(
+  getOrder() {
+    this.orderService.getCustomerOrder(this.orderId).subscribe(
       (response: any) => {
-        this.orders = response;
+        this.order = response;
       },
       (error: any) => {
         if (error.status == 401) {
@@ -68,11 +69,26 @@ export class CustomerOrdersComponent implements OnInit {
     );
   }
 
-  viewOrder(order: any) {
+  viewProduct(product: any) {
 
-    this.router.navigate(['/store/' + this.shopUniqueName + '/orders/' + order.entityId]);
+    this.router.navigate(['/store/' + this.shopUniqueName + '/product/' + product.productId]);
   }
 
-
+  cancelOrder() {
+    this.orderService.cancelCustomerOrder(this.orderId).subscribe(
+      (response: any) => {
+        this.order = response;
+        this.snackbarService.openSnackBar("Order cancelled successfully.");
+      },
+      (error: any) => {
+        if (error.status == 401) {
+          this.authService.logout(this.shopUniqueName);
+          this.snackbarService.openSnackBar("Your session has expired. Please login again.");
+        } else {
+          this.snackbarService.openSnackBar(error.error.message);
+        }
+      }
+    );
+  }
 
 }

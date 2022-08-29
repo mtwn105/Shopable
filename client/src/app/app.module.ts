@@ -31,6 +31,7 @@ import { MatCarouselModule } from '@ngmodule/material-carousel';
 import { CartComponent } from './components/store/cart/cart.component';
 import { PlaceOrderComponent } from './components/store/cart/place-order/place-order.component';
 import { CustomerOrdersComponent } from './components/store/customer-orders/customer-orders.component';
+import { ViewOrderComponent } from './components/store/customer-orders/view-order/view-order.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +51,8 @@ import { CustomerOrdersComponent } from './components/store/customer-orders/cust
     ProductComponent,
     CartComponent,
     PlaceOrderComponent,
-    CustomerOrdersComponent
+    CustomerOrdersComponent,
+    ViewOrderComponent
   ],
   imports: [
     BrowserModule,

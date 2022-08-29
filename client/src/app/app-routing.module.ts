@@ -1,3 +1,4 @@
+import { ViewOrderComponent } from './components/store/customer-orders/view-order/view-order.component';
 import { CustomerOrdersComponent } from './components/store/customer-orders/customer-orders.component';
 import { PlaceOrderComponent } from './components/store/cart/place-order/place-order.component';
 import { CartComponent } from './components/store/cart/cart.component';
@@ -74,14 +75,22 @@ const routes: Routes = [
   {
     path: 'store/:id/cart',
     component: CartComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'store/:id/checkout',
     component: PlaceOrderComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'store/:id/orders',
     component: CustomerOrdersComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'store/:id/orders/:orderId',
+    component: ViewOrderComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'store/:id/product/:productId',

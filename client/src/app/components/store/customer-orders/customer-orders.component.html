@@ -17,6 +17,7 @@
             <div>
               <p class="font-bold text-xl m-0">Order: {{ order.entityId }}</p>
               <p class="font-bold m-0">{{ order.items.length }} items</p>
+              <p class="font-bold m-0">Status: {{ order.status }}</p>
               <p class="text-gray-500 m-0">
                 Placed on: {{ order.createdDate | date }} {{ " | " }} Updated
                 on: {{ order.modifiedDate | date }}

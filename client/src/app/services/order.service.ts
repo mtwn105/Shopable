@@ -22,4 +22,12 @@ export class OrderService {
     return this.http.post(`${this.orderApi}/customer`, order);
   }
 
+  getCustomerOrder(orderId: string) {
+    return this.http.get(`${this.orderApi}/customer/${orderId}`);
+  }
+
+  cancelCustomerOrder(orderId: string) {
+    return this.http.delete(`${this.orderApi}/customer/${orderId}`);
+  }
+
 }
