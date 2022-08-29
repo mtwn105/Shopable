@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
+    this.authService.logout(this.shopUniqueName);
     this.snackbarService.openSnackBar("You have been logged out.");
   }
 
