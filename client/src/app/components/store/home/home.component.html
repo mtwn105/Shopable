@@ -55,6 +55,17 @@
         </mat-card-header>
         <!-- <img matCardImage src="Card wide image source"> -->
         <mat-card-content>
+          <img
+            *ngIf="
+              !!product.images &&
+              product.images.length > 0 &&
+              !!product.images[0]
+            "
+            matCardImage
+            [src]="product.images[0]"
+            [alt]="product.name"
+            height="200px"
+          />
           <p class="font-bold">{{ product.category }}</p>
           {{ product.description }}
         </mat-card-content>
