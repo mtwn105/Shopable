@@ -11,6 +11,9 @@ Powered by Redis Stack!
 **NodeJS**
 **Angular**
 
+## Demo Video
+Checkout video [here](https://youtu.be/sxY6KHoRkn8)
+
 ## How it works
 
 ### Process flow
