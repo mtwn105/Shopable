@@ -15,7 +15,9 @@ let orderItemsRepository = null;
   });
 
   connection.on("error", (err) => console.log("Redis Client Error", err));
-
+  connection.on("connect", function () {
+    console.log("Redis connected");
+  });
   await connection.connect();
 
   client = await new Client().use(connection);
