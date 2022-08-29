@@ -1,3 +1,6 @@
+import { RegisterComponent as StoreRegisterComponent } from './components/store/register/register.component';
+import { LoginComponent as StoreLoginComponent } from './components/store/login/login.component';
+import { HomeComponent as StoreHomeComponent } from './components/store/home/home.component';
 import { LoadingService } from './services/loading.service';
 import { AuthService } from './services/auth.service';
 import { JwtInterceptor } from './interceptor/http.interceptor';
@@ -36,7 +39,10 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
     FooterComponent,
     DashboardComponent,
     OrdersComponent,
-    ViewEditOrderComponent
+    ViewEditOrderComponent,
+    StoreHomeComponent,
+    StoreLoginComponent,
+    StoreRegisterComponent
   ],
   imports: [
     BrowserModule,

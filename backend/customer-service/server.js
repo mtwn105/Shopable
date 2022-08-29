@@ -80,6 +80,8 @@ app.post("/api/customer/register", async (req, res, next) => {
       .search()
       .where("email")
       .equals(email)
+      .and("merchantId")
+      .equals(merchantId)
       .first();
 
     if (customer) {
@@ -124,7 +126,7 @@ app.post("/api/customer/login", async (req, res, next) => {
       .first();
 
     if (!customer) {
-      return res.status(404).send("Customer not found");
+      return res.status(404).send({ message: "Customer not found" });
     }
 
     // Check if password is correct
@@ -139,6 +141,7 @@ app.post("/api/customer/login", async (req, res, next) => {
     return res.status(200).send({
       message: "Login successful",
       token,
+      customer,
     });
   } catch (err) {
     next(err);

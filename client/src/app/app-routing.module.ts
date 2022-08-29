@@ -1,3 +1,5 @@
+import { RegisterComponent as StoreRegisterComponent } from './components/store/register/register.component';
+import { LoginComponent as StoreLoginComponent } from './components/store/login/login.component';
 import { HomeComponent as StoreHomeComponent } from './components/store/home/home.component';
 import { AddEditProductComponent } from './components/merchant/inventory/add-edit-product/add-edit-product.component';
 import { OrdersComponent } from './components/merchant/orders/orders.component';
@@ -18,7 +20,7 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: StoreHomeComponent,
+    component: HomeComponent,
   },
   {
     path: 'merchant/login',
@@ -56,6 +58,14 @@ const routes: Routes = [
   {
     path: 'store/:id',
     component: StoreHomeComponent,
+  },
+  {
+    path: 'store/:id/login',
+    component: StoreLoginComponent,
+  },
+  {
+    path: 'store/:id/register',
+    component: StoreRegisterComponent,
   }
 ];
 

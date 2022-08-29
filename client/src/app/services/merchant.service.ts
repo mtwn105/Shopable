@@ -24,4 +24,8 @@ export class MerchantService {
     return this.http.get(`${this.merchantApi}/${merchantId}`);
   }
 
+  getShop(shopUniqueName: string) {
+    return this.http.get(`${this.merchantApi}/shop/${shopUniqueName}`);
+  }
+
 }

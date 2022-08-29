@@ -1,0 +1,21 @@
+h1 {
+  font-size: 3rem;
+  display: block;
+  font-weight: bold;
+}
+
+button {
+  margin-right: 0.5rem;
+}
+
+.header-div {
+
+  padding: 4rem;
+}
+
+@import '~@angular/material/theming';
+
+.clickable:hover {
+  @include mat-elevation(8);
+  cursor: pointer;
+}

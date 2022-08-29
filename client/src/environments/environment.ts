@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   merchantApi: 'http://localhost:8001/api/merchant',
   inventoryApi: 'http://localhost:8002/api/product',
+  customerApi: 'http://localhost:8003/api/customer',
   orderApi: 'http://localhost:8004/api/order',
 };
 

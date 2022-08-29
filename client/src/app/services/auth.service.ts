@@ -33,6 +33,14 @@ export class AuthService {
     return localStorage.getItem('userType');
   }
 
+  setStore(store: any) {
+    localStorage.setItem('store', JSON.stringify(store));
+  }
+
+  getStore() {
+    return JSON.parse((localStorage.getItem('store') as string));
+  }
+
   logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
