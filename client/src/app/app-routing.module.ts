@@ -1,3 +1,4 @@
+import { HomeComponent as StoreHomeComponent } from './components/store/home/home.component';
 import { AddEditProductComponent } from './components/merchant/inventory/add-edit-product/add-edit-product.component';
 import { OrdersComponent } from './components/merchant/orders/orders.component';
 import { InventoryComponent } from './components/merchant/inventory/inventory.component';
@@ -17,7 +18,7 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent,
+    component: StoreHomeComponent,
   },
   {
     path: 'merchant/login',
@@ -51,6 +52,10 @@ const routes: Routes = [
     path: 'merchant/orders',
     component: OrdersComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'store/:id',
+    component: StoreHomeComponent,
   }
 ];
 

@@ -24,7 +24,9 @@ const jwtVerify = (req, res, next) => {
     if (req.headers.authorization) {
       let token = req.headers["authorization"];
       if (!token) {
-        return res.status(401).send("Unauthorized");
+        return res.status(401).json({
+          message: "Unauthorized",
+        });
       }
 
       try {
@@ -36,7 +38,9 @@ const jwtVerify = (req, res, next) => {
           ? verifyMerchantToken(token)
           : verifyCustomerToken(token);
         if (!decoded) {
-          return res.status(401).send("Unauthorized");
+          return res.status(401).json({
+            message: "Unauthorized",
+          });
         }
 
         if (isMerchant) req.body.merchantId = decoded.entityId;
@@ -45,12 +49,18 @@ const jwtVerify = (req, res, next) => {
         next();
       } catch (err) {
         if (err.name === "TokenExpiredError") {
-          return res.status(401).send("Token Expired");
+          return res.status(401).json({
+            message: "Unauthorized",
+          });
         }
-        return res.status(401).send("Unauthorized");
+        return res.status(401).json({
+          message: "Unauthorized",
+        });
       }
     } else {
-      return res.status(401).send("Unauthorized");
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
     }
   } else {
     next();

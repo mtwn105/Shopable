@@ -12,7 +12,7 @@ const productSchema = new Schema(Product, {
   images: { type: "string[]" },
   price: { type: "number" },
   quantity: { type: "number" },
-  createdDate: { type: "date" },
+  createdDate: { type: "date", sortable: true },
   modifiedDate: { type: "date" },
 });
 

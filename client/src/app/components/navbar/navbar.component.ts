@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
   @Input() showBackButton: boolean = false;
   @Input() backRoute: string = 'Navbar';
   @Input() user: any;
+  @Input() userType: string = '';
 
   constructor(private authService: AuthService, private snackbarService: SnackbarService, private router: Router) { }
 
@@ -27,6 +28,10 @@ export class NavbarComponent implements OnInit {
 
   back() {
     this.router.navigate([this.backRoute]);
+  }
+
+  visitMerchantStore() {
+    this.router.navigate([]).then(result => { window.open("/store/" + this.user.shopUniqueName, '_blank'); });;
   }
 
 }

@@ -19,6 +19,12 @@
         <mat-icon>exit_to_app</mat-icon>
         <span>Logout</span>
       </button>
+      <ng-container *ngIf="userType == 'MERCHANT'">
+        <button (click)="visitMerchantStore()" mat-menu-item>
+          <mat-icon>open_in_new</mat-icon>
+          <span>Visit Store</span>
+        </button>
+      </ng-container>
     </mat-menu>
   </ng-container>
 </mat-toolbar>
