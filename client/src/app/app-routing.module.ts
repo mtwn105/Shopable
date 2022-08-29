@@ -1,3 +1,4 @@
+import { ProductComponent } from './components/store/product/product.component';
 import { RegisterComponent as StoreRegisterComponent } from './components/store/register/register.component';
 import { LoginComponent as StoreLoginComponent } from './components/store/login/login.component';
 import { HomeComponent as StoreHomeComponent } from './components/store/home/home.component';
@@ -66,6 +67,11 @@ const routes: Routes = [
   {
     path: 'store/:id/register',
     component: StoreRegisterComponent,
+  },
+  {
+    path: 'store/:id/product/:productId',
+    component: ProductComponent,
+    canActivate: [AuthGuard]
   }
 ];
 

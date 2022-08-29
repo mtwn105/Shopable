@@ -26,6 +26,7 @@ import { DashboardComponent } from './components/merchant/dashboard/dashboard.co
 import { OrdersComponent } from './components/merchant/orders/orders.component';
 import { ViewEditOrderComponent } from './components/merchant/orders/view-edit-order/view-edit-order.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { ProductComponent } from './components/store/product/product.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
     ViewEditOrderComponent,
     StoreHomeComponent,
     StoreLoginComponent,
-    StoreRegisterComponent
+    StoreRegisterComponent,
+    ProductComponent
   ],
   imports: [
     BrowserModule,

@@ -8,6 +8,17 @@
   <span class="spacer"></span>
 
   <ng-container *ngIf="!!user">
+    <button
+      *ngIf="userType == 'CUSTOMER'"
+      (click)="viewCart()"
+      mat-button
+      class=""
+    >
+      <mat-icon>shopping_cart</mat-icon>
+
+      Cart
+    </button>
+
     <button mat-button [matMenuTriggerFor]="menu">
       <mat-icon>account_circle</mat-icon>
 
@@ -19,6 +30,12 @@
         <button (click)="visitMerchantStore()" mat-menu-item>
           <mat-icon>open_in_new</mat-icon>
           <span>Visit Store</span>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="userType == 'CUSTOMER'">
+        <button (click)="viewOrders()" mat-menu-item>
+          <mat-icon>shop</mat-icon>
+          <span>Your Orders</span>
         </button>
       </ng-container>
       <button (click)="logout()" mat-menu-item>

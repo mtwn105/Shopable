@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   @Input() backRoute: string = 'Navbar';
   @Input() user: any;
   @Input() userType: string = '';
+  @Input() shopUniqueName: string = '';
 
   constructor(private authService: AuthService, private snackbarService: SnackbarService, private router: Router) { }
 
@@ -32,6 +33,14 @@ export class NavbarComponent implements OnInit {
 
   visitMerchantStore() {
     this.router.navigate([]).then(result => { window.open("/store/" + this.user.shopUniqueName, '_blank'); });;
+  }
+
+  viewOrders() {
+    this.router.navigate(['/store/' + this.shopUniqueName + '/orders']);
+  }
+
+  viewCart() {
+    this.router.navigate(['/store/' + this.shopUniqueName + '/cart']);
   }
 
 }

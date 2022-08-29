@@ -17,6 +17,32 @@
         </button>
       </div>
     </ng-container>
+    <ng-container *ngIf="loggedIn">
+      <div class="flex">
+        <button (click)="viewCart()" mat-button class="">
+          <mat-icon>shopping_cart</mat-icon>
+
+          Cart
+        </button>
+
+        <button mat-button [matMenuTriggerFor]="menu">
+          <mat-icon>account_circle</mat-icon>
+
+          {{ user?.name }}
+        </button>
+
+        <mat-menu #menu="matMenu">
+          <button (click)="viewOrders()" mat-menu-item>
+            <mat-icon>shop</mat-icon>
+            <span>Your Orders</span>
+          </button>
+          <button (click)="logout()" mat-menu-item>
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+      </div>
+    </ng-container>
   </div>
   <div class="grid grid-cols-3 p-4">
     <div *ngFor="let product of products" class="m-1">

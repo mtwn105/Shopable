@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   products: any[] = [];
   shopUniqueName: any;
   loggedIn: boolean = false;
+  user: any;
 
   constructor(private merchantService: MerchantService, private authService: AuthService,
     private snackbarService: SnackbarService, private router: Router, private inventoryService: InventoryService, private activatedRoute: ActivatedRoute) { }
@@ -24,6 +25,7 @@ export class HomeComponent implements OnInit {
 
     if (this.authService.getUserType() == 'CUSTOMER') {
       this.loggedIn = true;
+      this.user = this.authService.getUserDetails();
     }
 
     if (!!this.activatedRoute.snapshot.paramMap.get("id")) {
@@ -83,6 +85,19 @@ export class HomeComponent implements OnInit {
 
   register() {
     this.router.navigate(['/store/' + this.shopUniqueName + '/register']);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.snackbarService.openSnackBar("You have been logged out.");
+  }
+
+  viewOrders() {
+    this.router.navigate(['/store/' + this.shopUniqueName + '/orders']);
+  }
+
+  viewCart() {
+    this.router.navigate(['/store/' + this.shopUniqueName + '/cart']);
   }
 
 }
