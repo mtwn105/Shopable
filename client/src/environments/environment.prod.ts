@@ -4,4 +4,5 @@ export const environment = {
   inventoryApi: '/api/product',
   customerApi: '/api/customer',
   orderApi: '/api/order',
+  fileUploadApi: '/api/upload',
 };

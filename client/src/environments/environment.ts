@@ -8,6 +8,7 @@ export const environment = {
   inventoryApi: 'http://localhost:8002/api/product',
   customerApi: 'http://localhost:8003/api/customer',
   orderApi: 'http://localhost:8004/api/order',
+  fileUploadApi: 'http://localhost:8006/api/upload',
 };
 
 /*

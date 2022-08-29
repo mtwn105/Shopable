@@ -46,6 +46,42 @@
           <input type="number" matInput formControlName="quantity" required />
         </mat-form-field>
       </form>
+
+      <div>
+        <mat-carousel
+          timings="250ms ease-in"
+          [autoplay]="false"
+          [interval]="5000"
+          color="accent"
+          maxWidth="auto"
+          [proportion]="100"
+          [slides]="previews.length"
+          [loop]="true"
+          [hideArrows]="false"
+          [hideIndicators]="false"
+          orientation="ltr"
+          [maintainAspectRatio]="true"
+        >
+          <mat-carousel-slide
+            #matCarouselSlide
+            *ngFor="let slide of previews; let i = index"
+            [image]="slide"
+            overlayColor="#00000000"
+            [hideOverlay]="false"
+          ></mat-carousel-slide>
+        </mat-carousel>
+
+        <input
+          class="p-2"
+          type="file"
+          id="fileInput"
+          name="fileInput"
+          accept="image/*"
+          multiple
+          max="3"
+          (change)="selectFiles($event)"
+        />
+      </div>
     </mat-card-content>
   </mat-card>
 </div>
