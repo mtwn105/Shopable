@@ -15,16 +15,16 @@
     </button>
 
     <mat-menu #menu="matMenu">
-      <button (click)="logout()" mat-menu-item>
-        <mat-icon>exit_to_app</mat-icon>
-        <span>Logout</span>
-      </button>
       <ng-container *ngIf="userType == 'MERCHANT'">
         <button (click)="visitMerchantStore()" mat-menu-item>
           <mat-icon>open_in_new</mat-icon>
           <span>Visit Store</span>
         </button>
       </ng-container>
+      <button (click)="logout()" mat-menu-item>
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
     </mat-menu>
   </ng-container>
 </mat-toolbar>
