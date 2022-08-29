@@ -19,4 +19,8 @@ export class CustomerService {
     return this.http.post(`${this.customerApi}/register`, customer);
   }
 
+  addToCart(customerId: string, productId: string) {
+    return this.http.post(`${this.customerApi}/cart/${customerId}`, { productId });
+  }
+
 }

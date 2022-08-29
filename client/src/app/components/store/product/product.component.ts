@@ -19,6 +19,7 @@ export class ProductComponent implements OnInit {
   shop: any;
   productId: any;
   user: any;
+  addedToCart = false;
 
   constructor(private formBuilder: FormBuilder, private merchantService: MerchantService, private authService: AuthService, private snackbarService: SnackbarService, private router: Router, private activatedRoute: ActivatedRoute, private customerService: CustomerService, private inventoryService: InventoryService) { }
 
@@ -67,6 +68,27 @@ export class ProductComponent implements OnInit {
         }
       }
     );
+  }
+
+  addToCart() {
+    this.customerService.addToCart(this.user.entityId, this.productId).subscribe(
+      (response: any) => {
+        this.snackbarService.openSnackBar("Product added to cart");
+        this.addedToCart = true;
+      },
+      (error: any) => {
+        if (error.status == 401) {
+          this.authService.logout(this.shopUniqueName);
+          this.snackbarService.openSnackBar("Your session has expired. Please login again.");
+        } else {
+          this.snackbarService.openSnackBar(error.error.message);
+        }
+      }
+    );
+  }
+
+  goToCart() {
+    this.router.navigate(['/store/' + this.shopUniqueName + '/cart'])
   }
 
 }

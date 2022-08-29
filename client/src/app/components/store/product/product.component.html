@@ -8,16 +8,69 @@
 >
 </app-navbar>
 
-<mat-card matRipple>
-  <mat-card-header class="ml-0">
-    <mat-card-title>{{ product.name }}</mat-card-title>
-    <mat-card-subtitle>{{
-      product.discountPrice | currency: "INR"
-    }}</mat-card-subtitle>
-  </mat-card-header>
-  <!-- <img matCardImage src="Card wide image source"> -->
-  <mat-card-content>
-    <p class="font-bold">{{ product.category }}</p>
-    {{ product.description }}
-  </mat-card-content>
-</mat-card>
+<div class="grid grid-cols-2 p-4">
+  <div>
+    <mat-carousel
+      timings="250ms ease-in"
+      [autoplay]="true"
+      [interval]="5000"
+      color="accent"
+      maxWidth="auto"
+      [proportion]="25"
+      [slides]="product?.images?.length"
+      [loop]="true"
+      [hideArrows]="false"
+      [hideIndicators]="false"
+      orientation="ltr"
+    >
+      <mat-carousel-slide
+        #matCarouselSlide
+        *ngFor="let slide of product.images; let i = index"
+        [image]="slide"
+        overlayColor="#00000040"
+        [hideOverlay]="false"
+      ></mat-carousel-slide>
+    </mat-carousel>
+  </div>
+  <div>
+    <p class="font-bold text-2xl">
+      {{ product.name }}
+    </p>
+    <p class="text-2xl text-green-500">
+      {{ product.discountPrice | currency: "INR" }}
+      <span *ngIf="product.discountPrice < product.price">
+        <span class="text-red-500 strikethrough text-lg">
+          {{ product.price | currency: "INR" }}
+        </span>
+        <span class="text-gray-500 text-lg">
+          ({{
+            (product.price - product.discountPrice) / product.price | percent
+          }}
+          off)
+        </span>
+      </span>
+    </p>
+    <p class="text-sm text-gray-500">Category: {{ product.category }}</p>
+    <p class="">
+      {{ product.description }}
+    </p>
+    <button
+      *ngIf="!addedToCart"
+      class="mr-2"
+      color="accent"
+      mat-raised-button
+      (click)="addToCart()"
+    >
+      Add to Cart
+    </button>
+    <button
+      *ngIf="addedToCart"
+      class="mr-2"
+      color="accent"
+      mat-raised-button
+      (click)="goToCart()"
+    >
+      Go to Cart
+    </button>
+  </div>
+</div>

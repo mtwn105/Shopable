@@ -27,7 +27,7 @@ import { OrdersComponent } from './components/merchant/orders/orders.component';
 import { ViewEditOrderComponent } from './components/merchant/orders/view-edit-order/view-edit-order.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { ProductComponent } from './components/store/product/product.component';
-
+import { MatCarouselModule } from '@ngmodule/material-carousel';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +53,8 @@ import { ProductComponent } from './components/store/product/product.component';
     MaterialModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatCarouselModule.forRoot()
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },

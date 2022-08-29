@@ -41,12 +41,14 @@ export class AuthService {
     return JSON.parse((localStorage.getItem('store') as string));
   }
 
-  logout() {
+  logout(shopUniqueName?: string) {
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
     localStorage.removeItem('userType');
     if (this.router.url.includes('merchant')) {
       this.router.navigate(['/merchant/login']);
+    } else if (this.router.url.includes('store')) {
+      this.router.navigate(['/store/' + shopUniqueName + '/login']);
     }
   }
 
