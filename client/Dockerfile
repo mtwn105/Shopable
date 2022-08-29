@@ -26,4 +26,4 @@ COPY --from=build /usr/local/app/dist/client /usr/share/nginx/html
 # Expose port 80
 EXPOSE 80
 
-CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]
+CMD ["/bin/sh",  "-c",  "exec nginx -g 'daemon off;'"]
