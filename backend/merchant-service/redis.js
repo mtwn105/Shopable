@@ -13,7 +13,10 @@ let merchantRepository = null;
     url: process.env.REDIS_URL,
   });
 
-  connection.on("error", (err) => console.log("Redis Client Error", err));
+  connection.on("error", (err) => console.error("Redis Client Error", err));
+  connection.on("connect", function () {
+    console.log("Redis connected");
+  });
 
   await connection.connect();
 
