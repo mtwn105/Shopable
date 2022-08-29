@@ -62,6 +62,32 @@ const orderSchema = new Schema(Order, {
 });
 ```
 
+Here's the save command:
+
+```javascript
+// Create Order
+let order = {
+  merchantId,
+  customerId,
+  status: "PLACED",
+  price: totalPrice,
+  name,
+  phoneNumber,
+  email,
+  address,
+  state,
+  country,
+  createdDate: new Date(),
+  modifiedDate: new Date(),
+};
+
+order = await orderRepository.createAndSave(order);
+```
+
+Here's a look at RedisInsight:
+
+![image](https://user-images.githubusercontent.com/12975481/187294325-96845300-3795-4c1c-8368-d260adea74c2.png)
+
 ### How the data is accessed:
 
 There are many different types of data access operations happened in the process flow.
@@ -74,6 +100,12 @@ Here's an example of fetching orders for a customer on a store:
       .equals(customerId)
       .sortBy("createdDate", "DESC")
       .return.all();
+```
+
+For listening to Redis Stream this command is used:
+
+```sh
+XRANGE orders-update - +
 ```
 
 ## How to run it locally?
