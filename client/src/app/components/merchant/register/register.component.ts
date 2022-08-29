@@ -33,7 +33,6 @@ export class RegisterComponent implements OnInit {
       phoneNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       shopName: ['', [Validators.required]],
       shopUniqueName: ['', [Validators.required]],
-      shopLogo: ['',]
     });
 
   }

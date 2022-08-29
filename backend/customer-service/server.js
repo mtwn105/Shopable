@@ -438,7 +438,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(process.env.PORT || 3000, async function () {
-  console.log("Product Service is running");
+  console.log("Customer Service is running");
 });
 
 module.exports = app;

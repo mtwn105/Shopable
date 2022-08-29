@@ -3,6 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const multer = require("multer");
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
 require("dotenv").config();
 
@@ -34,7 +35,12 @@ const uploadImage = (file) =>
 
     const { originalname, buffer } = file;
 
-    const blob = bucket.file(originalname.replace(/ /g, "_"));
+    // Get file extension
+    const extension = originalname.split(".").pop();
+
+    const fileName = uuidv4() + "." + extension;
+
+    const blob = bucket.file(fileName);
     const blobStream = blob.createWriteStream({
       resumable: false,
     });
